@@ -1,5 +1,5 @@
 #javajsp与mvc初学指南
-app01 
+app01 </br>
 servlet 技术属于java web中非常重要的一门技术，是一个java程序。一个servlet应用有多个servelt程序，jsp页面也会被转换编译成servelt程序，因此servlet应用可以说是servlet与jsp的应用。
 servlet应用无法独立运行，需要依靠容器运行，也就是tomcat容器，tomcat可以处理servlet应用与静态内容，http服务器（tomcat容器子模块）通常处理静态资源，用于将web客户端用户请求传递给servlet应用，并将结果返回给客户端，从客户端到服务器使用http协议通信。
 servlet api  有4个java包 
