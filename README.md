@@ -17,11 +17,12 @@ servlet接口中的5个方法？
 生命周期方法有3个  init，service ，destory  
 init：servlet应用第一次被请求会调用该方法，用于初始化工作，调用这个方法，servlet容器会传入一个servletconfig，由我们给一个类级变量去初始化  
 service：每当请求servlet时，就会调用该方法去处理请求  
-destory：当servlet应用要被销毁时会调用这个方法，用于关闭资源
+destory：当servlet应用要被销毁时(服务器重启或停止)会调用这个方法，用于关闭资源
 getservletinfo：返回servlet的描述，比如作者，版权，版本信息等
 getservlerconfig：返回由servlet容器传给init方法的servletconfig，我们给了类级变量，就是返回我们给的类
 
-
+servlet的安全问题是怎么出现的？
+首先多个客户端发送请求，服务器会为每个请求创建一个线程去访问servlet的service方法，然后访问相应的数据，访问方法没有任何问题，因为线程间独立，但是出现成员变量等会有安全问题，因为线程共享，这个时候可以使用绑定线程的threadlocal去存变量数据。还有方法就是servlet实现SingleThreadModel接口，这个时候servlet应用会为每个线程的访问创建一个servlet实例，这样service方法间都是相互独立的了，但是这样只是解决安全问题，并不是解决并发问题的那种，因为并发指的是多个线程调用一个实例的情况，而且会让系统开销变得非常大，已经废弃。并发安全我们可以考虑使用synchronized同步代码块，service方法中在使用变量的时候代码块包裹住，保证只有一个线程使用，但是无法处理高并发，会导致性能特别差。最好的办法就是将变量放在方法中，不适用成员变量，实在没办法就threadlocal或者使用java.util.concurrent.atomic包的成员。
 
 
 
