@@ -24,9 +24,21 @@ getservlerconfig：返回由servlet容器传给init方法的servletconfig，提�
 servlet的安全问题是怎么出现的？  
 首先多个客户端发送请求，服务器会为每个请求创建一个线程去访问servlet的service方法，然后访问相应的数据，访问方法没有任何问题，因为线程间独立，但是出现成员变量等会有安全问题，因为线程共享，这个时候可以使用绑定线程的threadlocal去存变量数据。还有方法就是servlet实现SingleThreadModel接口，这个时候servlet应用会为每个线程的访问创建一个servlet实例，这样service方法间都是相互独立的了，但是这样只是解决安全问题，并不是解决并发问题的那种，因为并发指的是多个线程调用一个实例的情况，而且会让系统开销变得非常大，已经废弃。并发安全我们可以考虑使用synchronized同步代码块，service方法中在使用变量的时候代码块包裹住，保证只有一个线程使用，但是无法处理高并发，会导致性能特别差。最好的办法就是将变量放在方法中，不适用成员变量，实在没办法就threadlocal或者使用java.util.concurrent.atomic包的成员。
 
-idea如何配置tomcat容器构建第一个java web文件呢？  
+idea如何配置tomcat容器构建第一个java web文件呢？ 
+新建一个空项目并创建一个java模块，给这个项目添加一个tomcat容器，点击添加配置，添加一个tomcat的server，指定版本就行。点击文件，点击项目结构，需要添加2个jar包到libraries下，在安装好的tomcat的文件夹的lib文件夹下有这2个jar包，叫jsp-api.jar和servlet-api.jar。在项目结构中最后一个artifacts中添加web application ：exploded。在项目结构中facets中添加一个名叫web的web框架，并在tomcat的配置中的deployment中添加这个artifacts到容器。最后在modules中的paths下配置tomcat的输出路径为WEB-INF\classes下即可。这个classes文件夹使用来存放编译后的class类的，这里我们已经配置编译后的文件放入classes中
 
+servletrequest接口和servletresponse接口?  
+对于每一个http请求，servelt容器都会创建一个servletrequest实例，并传给service方法，接口中有一些方法可以获取请求信息。  
+public String getContentType() ：返回请求主体的MIME类型  
+public String getParameter(String name)：获取指定请求参数的值，url中或者请求体中的都可以  
+对于每一个http请求，servelt容器都会创建一个servletresponse实例，并传给service方法，用于向浏览器发送响应  
+public PrintWriter getWriter()：PrintWriter对象的println()用于向浏览器响应数据，大多数情况作为html文本格式发送  
+所以在发送请求之前应通过servletresponse的setContentType设置发送的数据格式让浏览器识别。
 
+servletconfig接口？
+在servlet容器初始化servlet时会给init方法传入一个servletconfig，该方法封装的配置信息，我们可以在部署描述符或者@webservlet注解中赋予。  
+String getInitParameter(String name)：获取指定名称的初始参数值  
+该接口还提供了一个获取上下文对象servletcontext的方法getServletContext()
 
 
 
