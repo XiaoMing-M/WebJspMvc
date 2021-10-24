@@ -38,9 +38,24 @@ public PrintWriter getWriter()：PrintWriter对象的println()用于向浏览器
 servletconfig接口?  
 在servlet容器初始化servlet时会给init方法传入一个servletconfig，该方法封装的配置信息，我们可以在部署描述符或者@webservlet注解中赋予。  
 String getInitParameter(String name)：获取指定名称的初始参数值  
+String getServletName()：获取应用的名字  
+Enumeration<String> getInitParameterNames()：获取所有初始化参数值并返回枚举  
 该接口还提供了一个获取上下文对象servletcontext的方法getServletContext()
 
-
+ServletContext接口？  
+ServletContext表示Servlet应用程序，每一个web应用只有一个，通过在ServletConfig中调用getServletContext()方法可以获取ServletContext，有了这个
+我们就可以共享从应用程序中访问到的信息，这些信息被保存在ServletContext中的一个内部Map中。  并提供如下方法进行代码操作
+Object getAttribute(String name)：获取通过访问map中的key获取值  
+Enumeration<String> getAttributeNames()：获取所有，并返回枚举类  
+setAttribute(String name, Object object)：存储某些数据到map中  
+removeAttribute(String name)：移除map中的某些数据
+  
+GenericServlet抽象类？  
+servlet接口并不是直接被类实现，中间还有一个抽象类genericservlet，这个是干啥的？  
+如果没有这个类，那么我们每次实现Servlet都需要实现5个方法，3个生命周期，2个获取信息的方法，即便我们不使用也必须要实现，因为这个是接口的特性，必须实现，还有一些额外的代码，比如需要在初始化方法init的参数中接收由容器传过来的servletconfig，并完成ServletConfig对象保存到类级变量中，以便在使用getservlerconfig()时可以获取配置对象，这是非常繁琐和麻烦的，于是出现了这个抽象类。实现了2个接口，servlet和servletconfig，并将容器给的servletconfig给了类级变量，我们可以直接获取，提供了2个接口的默认实现，我们只需实现servlet方法即可。GenericServlet实现了2个init方法，这是为什么呢？因为容器只会给有参的init赋予ServletConfig对象，我们需要继承这个GenericServlet抽象类，父类如果只有一个init(ServletConfig config)方法，我们就必须使用init(ServletConfig config)方法去覆盖父类的这个方法，必须使用super.init(servletConfig)给父类类级变量赋值，容器会给子类传递的config赋予给父类的类级变量，我们在调用父类的getServletConfig()时候不会出现null值，就很麻烦，父类再给个init方法，我们在重写时只需要重写这个，容器初始化调用的时候，子类继承了父类的带参init，会直接去父类给父类的类级变量赋值，由于父类的带参init调用了无参init(),因为我们使用的子类初始化，其就会调用子类重写的无参init()，非常完美的解决以上问题  
+ 
+  
+ 
 
 
 
