@@ -52,13 +52,21 @@ removeAttribute(String name)：移除map中的某些数据
   
 GenericServlet抽象类？  
 servlet接口并不是直接被类实现，中间还有一个抽象类genericservlet，这个是干啥的？  
-如果没有这个类，那么我们每次实现Servlet都需要实现5个方法，3个生命周期，2个获取信息的方法，即便我们不使用也必须要实现，因为这个是接口的特性，必须实现，还有一些额外的代码，比如需要在初始化方法init的参数中接收由容器传过来的servletconfig，并完成ServletConfig对象保存到类级变量中，以便在使用getservlerconfig()时可以获取配置对象，这是非常繁琐和麻烦的，于是出现了这个抽象类。实现了2个接口，servlet和servletconfig，并将容器给的servletconfig给了类级变量，我们可以直接获取，提供了2个接口的默认实现，我们只需实现servlet方法即可。GenericServlet实现了2个init方法，这是为什么呢？因为容器只会给有参的init赋予ServletConfig对象，我们需要继承这个GenericServlet抽象类，父类如果只有一个init(ServletConfig config)方法，我们就必须使用init(ServletConfig config)方法去覆盖父类的这个方法，必须使用super.init(servletConfig)给父类类级变量赋值，容器会给子类传递的config赋予给父类的类级变量，我们在调用父类的getServletConfig()时候不会出现null值，就很麻烦，父类再给个init方法，我们在重写时只需要重写这个，容器初始化调用的时候，子类继承了父类的带参init，会直接去父类给父类的类级变量赋值，由于父类的带参init调用了无参init(),因为我们使用的子类初始化，其就会调用子类重写的无参init()，非常完美的解决以上问题  
+如果没有这个类，那么我们每次实现Servlet都需要实现5个方法，3个生命周期，2个获取信息的方法，即便我们不使用也必须要实现，因为这个是接口的特性，必须实现，还有一些额外的代码，比如需要在初始化方法init的参数中接收由容器传过来的servletconfig，并完成ServletConfig对象保存到类级变量中，以便在使用getservlerconfig()时可以获取配置对象，这是非常繁琐和麻烦的，于是出现了这个抽象类。实现了2个接口，servlet和servletconfig，并将容器给的servletconfig给了类级变量，我们可以直接获取，提供了2个接口的默认实现，我们只需实现servlet方法即可。  
+GenericServlet实现了2个init方法，这是为什么呢？  
+因为容器只会给有参的init赋予ServletConfig对象，我们需要继承这个GenericServlet抽象类，父类如果只有一个init(ServletConfig config)方法，我们就必须使用init(ServletConfig config)方法去覆盖父类的这个方法，必须使用super.init(servletConfig)给父类类级变量赋值，这样容器会给子类传递的config赋予给父类的类级变量，我们在调用父类的getServletConfig()时候才不会出现null值，但是很麻烦，要是父类再给个无参init方法，我们在重写时只需要重写这个，容器初始化调用的时候，子类继承了父类的带参init，会直接去父类给父类的类级变量赋值，由于父类的带参init调用了无参init(),因为我们使用的子类初始化，其就会调用子类重写的无参init()，非常完美的解决以上问题  
  
-  
- 
+servlet的第二个api包，javax.servlet.http？  
+为了更方便与http结合使用从而利用一些http的特性，提供了基于http编写servlet的类与接口，里面很多都覆盖了servlet的类型
 
+javax.servlet.http有哪些接口和类？  
+httpServlet类,httpservletrequest接口,httpservletresponse接口,httpsession接口,cookie    
+httpServlet类这是个重要的类，继承自servlet接口的抽象类genericservlet ,提供了其他的方法与参数， httpservletrequest接口和httpservletresponse接口也都继承自servletrequest接口 和servletresponse接口意味着有一些相同的实现和一些自己的扩展，
 
+	
 
+	
+	
 
 
 
